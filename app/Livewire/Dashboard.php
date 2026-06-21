@@ -44,7 +44,7 @@ class Dashboard extends Component
         $totalMealQty = $meals->sum();
         $totalDeposits = $deposits->sum();
 
-        $summary = $members->map(function ($member) use ($deposits, $meals, $totalExpenses, $totalMealQty, $currentMemberId) {
+        $summary = $members->map(function ($member) use ($deposits, $meals, $totalExpenses, $totalMealQty, $currentMemberId, $members) {
             $memberDeposits = (float) ($deposits[$member->id] ?? 0);
             $memberMeals = (float) ($meals[$member->id] ?? 0);
             $expenseShare = $totalMealQty > 0
