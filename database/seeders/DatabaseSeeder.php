@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
         $users = [
             [
                 'name' => 'Manager',
-                'email' => 'manger@gmail.com',
+                'email' => 'manager@gmail.com',
                 'password' => bcrypt('password'),
                 'role_id' => Role::Manager,
             ],
