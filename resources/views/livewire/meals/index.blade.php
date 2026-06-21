@@ -17,6 +17,7 @@
             <h1 class="text-2xl font-bold">Meals</h1>
         </div>
 
+        @if (Auth::user()->role_id === App\Enums\Role::Manager)
         <form wire:submit="save" class="mb-10 p-6 border border-gray-200 rounded-xl">
             <h2 class="font-semibold text-sm mb-4">{{ $editingId ? 'Edit Meal' : 'Add Meal' }}</h2>
             <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-4">
@@ -58,6 +59,7 @@
                 @endif
             </div>
         </form>
+        @endif
 
         <div class="border border-gray-200 rounded-xl overflow-hidden">
             <table class="w-full text-sm">
@@ -67,8 +69,10 @@
                         <th class="px-6 py-3 font-medium text-gray-600">Date</th>
                         <th class="px-6 py-3 font-medium text-gray-600">Type</th>
                         <th class="px-6 py-3 font-medium text-gray-600">Quantity</th>
-                        <th class="px-6 py-3 font-medium text-gray-600"></th>
-                        <th class="px-6 py-3 font-medium text-gray-600"></th>
+                        @if (Auth::user()->role_id === App\Enums\Role::Manager)
+                            <th class="px-6 py-3 font-medium text-gray-600"></th>
+                            <th class="px-6 py-3 font-medium text-gray-600"></th>
+                        @endif
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
@@ -78,12 +82,14 @@
                             <td class="px-6 py-3 text-gray-500">{{ $meal->date->format('M d, Y') }}</td>
                             <td class="px-6 py-3">{{ ucfirst($meal->type->name) }}</td>
                             <td class="px-6 py-3">{{ number_format($meal->quantity, 2) }}</td>
-                            <td class="px-6 py-3 text-right">
-                                <button wire:click="editMeal({{ $meal->id }})" class="text-gray-500 hover:text-gray-700 text-xs font-medium">Edit</button>
-                            </td>
-                            <td class="px-6 py-3 text-right">
-                                <button wire:click="deleteMeal({{ $meal->id }})" wire:confirm="Are you sure you want to delete this meal?" class="text-red-500 hover:text-red-700 text-xs font-medium">Delete</button>
-                            </td>
+                            @if (Auth::user()->role_id === App\Enums\Role::Manager)
+                                <td class="px-6 py-3 text-right">
+                                    <button wire:click="editMeal({{ $meal->id }})" class="text-gray-500 hover:text-gray-700 text-xs font-medium">Edit</button>
+                                </td>
+                                <td class="px-6 py-3 text-right">
+                                    <button wire:click="deleteMeal({{ $meal->id }})" wire:confirm="Are you sure you want to delete this meal?" class="text-red-500 hover:text-red-700 text-xs font-medium">Delete</button>
+                                </td>
+                            @endif
                         </tr>
                     @endforeach
                 </tbody>

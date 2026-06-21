@@ -3,6 +3,7 @@
 namespace App\Livewire\Meals;
 
 use App\Enums\MealType;
+use App\Enums\Role;
 use App\Enums\VisibilityStatus;
 use App\Models\Meal;
 use App\Models\Member;
@@ -45,6 +46,10 @@ class Index extends Component
 
     public function save()
     {
+        if (Auth::user()->role_id !== Role::Manager) {
+            return;
+        }
+
         $this->validate();
 
         Meal::updateOrCreate(
@@ -65,6 +70,9 @@ class Index extends Component
 
     public function editMeal($id)
     {
+        if (Auth::user()->role_id !== Role::Manager) {
+            return;
+        }
         $meal = Meal::findOrFail($id);
         $this->editingId = $meal->id;
         $this->member_id = $meal->member_id;
@@ -82,6 +90,9 @@ class Index extends Component
 
     public function deleteMeal($id)
     {
+        if (Auth::user()->role_id !== Role::Manager) {
+            return;
+        }
         Meal::findOrFail($id)->delete();
         $this->dispatch('toast', message: 'Meal deleted.');
     }

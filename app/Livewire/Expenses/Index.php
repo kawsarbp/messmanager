@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Expenses;
 
+use App\Enums\Role;
 use App\Models\Expense;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
@@ -34,6 +35,10 @@ class Index extends Component
 
     public function save()
     {
+        if (Auth::user()->role_id !== Role::Manager) {
+            return;
+        }
+
         $this->validate();
 
         $mess = Auth::user()->member->mess;
@@ -55,6 +60,9 @@ class Index extends Component
 
     public function editExpense($id)
     {
+        if (Auth::user()->role_id !== Role::Manager) {
+            return;
+        }
         $expense = Expense::findOrFail($id);
         $this->editingId = $expense->id;
         $this->amount = $expense->amount;
@@ -71,6 +79,9 @@ class Index extends Component
 
     public function deleteExpense($id)
     {
+        if (Auth::user()->role_id !== Role::Manager) {
+            return;
+        }
         Expense::findOrFail($id)->delete();
         $this->dispatch('toast', message: 'Expense deleted.');
     }

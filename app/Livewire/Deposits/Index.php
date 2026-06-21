@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Deposits;
 
+use App\Enums\Role;
 use App\Enums\VisibilityStatus;
 use App\Models\Deposit;
 use App\Models\Member;
@@ -36,6 +37,10 @@ class Index extends Component
 
     public function save()
     {
+        if (Auth::user()->role_id !== Role::Manager) {
+            return;
+        }
+
         $this->validate();
 
         Deposit::updateOrCreate(
@@ -54,6 +59,9 @@ class Index extends Component
 
     public function editDeposit($id)
     {
+        if (Auth::user()->role_id !== Role::Manager) {
+            return;
+        }
         $deposit = Deposit::findOrFail($id);
         $this->editingId = $deposit->id;
         $this->member_id = $deposit->member_id;
@@ -70,6 +78,9 @@ class Index extends Component
 
     public function deleteDeposit($id)
     {
+        if (Auth::user()->role_id !== Role::Manager) {
+            return;
+        }
         Deposit::findOrFail($id)->delete();
         $this->dispatch('toast', message: 'Deposit deleted.');
     }
