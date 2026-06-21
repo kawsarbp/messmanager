@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Deposits;
 
+use App\Enums\VisibilityStatus;
 use App\Models\Deposit;
 use App\Models\Member;
 use Illuminate\Support\Facades\Auth;
@@ -85,7 +86,7 @@ class Index extends Component
     {
         $user = Auth::user();
         $mess = $user->member->mess;
-        $memberIds = $mess->members()->pluck('id');
+        $memberIds = $mess->members()->where('status', VisibilityStatus::Active)->pluck('id');
 
         $members = Member::with('user')->whereIn('id', $memberIds)->orderBy('id')->get();
 

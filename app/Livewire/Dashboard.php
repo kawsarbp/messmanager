@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Enums\VisibilityStatus;
 use App\Models\Deposit;
 use App\Models\Expense;
 use App\Models\Meal;
@@ -25,7 +26,7 @@ class Dashboard extends Component
         $mess = $user->member->mess;
         $currentMemberId = $user->member->id;
 
-        $members = Member::with('user')->where('mess_id', $mess->id)->get();
+        $members = Member::with('user')->where('mess_id', $mess->id)->where('status', VisibilityStatus::Active)->get();
         $memberIds = $members->pluck('id');
 
         $totalExpenses = Expense::where('mess_id', $mess->id)->sum('amount');

@@ -3,6 +3,7 @@
 namespace App\Livewire\Meals;
 
 use App\Enums\MealType;
+use App\Enums\VisibilityStatus;
 use App\Models\Meal;
 use App\Models\Member;
 use Carbon\Carbon;
@@ -96,7 +97,7 @@ class Index extends Component
     public function render()
     {
         $mess = Auth::user()->member->mess;
-        $memberIds = $mess->members()->pluck('id');
+        $memberIds = $mess->members()->where('status', VisibilityStatus::Active)->pluck('id');
 
         $members = Member::with('user')->whereIn('id', $memberIds)->orderBy('id')->get();
 
