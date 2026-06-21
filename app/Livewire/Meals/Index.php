@@ -9,6 +9,7 @@ use App\Models\Meal;
 use App\Models\Member;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -18,8 +19,7 @@ class Index extends Component
 
     public $member_id = '';
     public $date = '';
-    public $type = '';
-    public $quantity = 1;
+    public $types = [];
     public $editingId = null;
     public $filterMemberId = '';
 
@@ -28,8 +28,8 @@ class Index extends Component
         return [
             'member_id' => ['required', 'exists:members,id'],
             'date' => ['required', 'date'],
-            'type' => ['required', 'integer', 'in:1,2,3'],
-            'quantity' => ['required', 'numeric', 'min:0.01', 'max:999.99'],
+            'types' => ['required', 'array', 'min:1'],
+            'types.*' => ['required', 'integer', 'in:1,2,3'],
         ];
     }
 
@@ -43,13 +43,6 @@ class Index extends Component
         $this->resetPage();
     }
 
-    public function updatedType($value)
-    {
-        if ($value !== '') {
-            $this->quantity = MealType::from((int) $value)->rate();
-        }
-    }
-
     public function save()
     {
         if (Auth::user()->role_id !== Role::Manager) {
@@ -60,20 +53,26 @@ class Index extends Component
 
         $activeMonth = Auth::user()->member->mess->activeMonth();
 
-        Meal::updateOrCreate(
-            [
-                'id' => $this->editingId,
-            ],
-            [
-                'month_id' => $activeMonth?->id,
-                'member_id' => $this->member_id,
-                'date' => $this->date,
-                'type' => $this->type,
-                'quantity' => $this->quantity,
-            ]
-        );
+        if ($this->editingId) {
+            Meal::findOrFail($this->editingId)->delete();
+        }
 
-        $this->dispatch('toast', message: $this->editingId ? 'Meal updated successfully.' : 'Meal added successfully.');
+        foreach ($this->types as $type) {
+            Meal::firstOrCreate(
+                [
+                    'member_id' => $this->member_id,
+                    'date' => $this->date,
+                    'type' => $type,
+                ],
+                [
+                    'month_id' => $activeMonth?->id,
+                    'quantity' => MealType::from((int) $type)->rate(),
+                ]
+            );
+        }
+
+        $this->dispatch('toast', message: $this->editingId ? 'Meal updated successfully.' : 'Meal(s) added successfully.');
+
         $this->cancelEdit();
     }
 
@@ -86,14 +85,12 @@ class Index extends Component
         $this->editingId = $meal->id;
         $this->member_id = $meal->member_id;
         $this->date = $meal->date->format('Y-m-d');
-        $this->type = $meal->type->value;
-        $this->quantity = $meal->quantity;
+        $this->types = [$meal->type->value];
     }
 
     public function cancelEdit()
     {
-        $this->reset('editingId', 'member_id', 'type', 'quantity');
-        $this->quantity = 1;
+        $this->reset('editingId', 'member_id', 'types');
         $this->date = now()->format('Y-m-d');
     }
 
@@ -123,11 +120,26 @@ class Index extends Component
 
         $activeMonth = $mess->activeMonth();
 
-        $meals = Meal::whereIn('member_id', $memberIds)
-            ->when($activeMonth, fn ($q) => $q->where('month_id', $activeMonth->id))
-            ->with('member.user')
-            ->when($this->filterMemberId, fn ($q) => $q->where('member_id', $this->filterMemberId))
-            ->latest()
+        $meals = DB::table('meals')
+            ->join('members', 'meals.member_id', '=', 'members.id')
+            ->join('users', 'members.user_id', '=', 'users.id')
+            ->whereIn('meals.member_id', $memberIds)
+            ->when($activeMonth, fn ($q) => $q->where('meals.month_id', $activeMonth->id))
+            ->when($this->filterMemberId, fn ($q) => $q->where('meals.member_id', $this->filterMemberId))
+            ->selectRaw("
+                meals.member_id,
+                meals.date,
+                users.name as member_name,
+                MAX(CASE WHEN meals.type = 1 THEN meals.quantity END) as breakfast_quantity,
+                MAX(CASE WHEN meals.type = 2 THEN meals.quantity END) as lunch_quantity,
+                MAX(CASE WHEN meals.type = 3 THEN meals.quantity END) as dinner_quantity,
+                MAX(CASE WHEN meals.type = 1 THEN meals.id END) as breakfast_id,
+                MAX(CASE WHEN meals.type = 2 THEN meals.id END) as lunch_id,
+                MAX(CASE WHEN meals.type = 3 THEN meals.id END) as dinner_id
+            ")
+            ->groupBy('meals.member_id', 'meals.date', 'users.name')
+            ->orderBy('meals.date', 'desc')
+            ->orderBy('users.name')
             ->paginate(20);
 
         return view('livewire.meals.index', [
