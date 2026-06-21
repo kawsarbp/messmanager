@@ -124,6 +124,11 @@
                 </thead>
                 <tbody class="divide-y divide-gray-100">
                     @foreach ($meals as $meal)
+                        @php
+                            $bIds = $meal->breakfast_ids ? explode(',', $meal->breakfast_ids) : [];
+                            $lIds = $meal->lunch_ids ? explode(',', $meal->lunch_ids) : [];
+                            $dIds = $meal->dinner_ids ? explode(',', $meal->dinner_ids) : [];
+                        @endphp
                         <tr>
                             <td class="px-6 py-3">{{ $meal->member_name }}</td>
                             <td class="px-6 py-3 text-gray-500">{{ \Carbon\Carbon::parse($meal->date)->format('M d, Y') }}</td>
@@ -131,9 +136,12 @@
                                 @if ($meal->breakfast_quantity !== null)
                                     <div class="flex items-center gap-2">
                                         <span>{{ number_format($meal->breakfast_quantity, 2) }}</span>
+                                        @if (count($bIds) > 1)
+                                            <span class="text-xs text-gray-400">({{ count($bIds) }})</span>
+                                        @endif
                                         @if (Auth::user()->role_id === App\Enums\Role::Manager)
-                                            <button wire:click="editMeal({{ $meal->breakfast_id }})" wire:loading.attr="disabled" class="disabled:opacity-50 text-gray-500 hover:text-gray-700 text-xs font-medium">Edit</button>
-                                            <button wire:click="deleteMeal({{ $meal->breakfast_id }})" wire:loading.attr="disabled" wire:confirm="Are you sure you want to delete this meal?" class="disabled:opacity-50 text-red-500 hover:text-red-700 text-xs font-medium">Delete</button>
+                                            <button wire:click="editMeal({{ $bIds[0] }})" wire:loading.attr="disabled" class="disabled:opacity-50 text-gray-500 hover:text-gray-700 text-xs font-medium">Edit</button>
+                                            <button wire:click="deleteMeal({{ end($bIds) }})" wire:loading.attr="disabled" wire:confirm="Are you sure you want to delete this meal?" class="disabled:opacity-50 text-red-500 hover:text-red-700 text-xs font-medium">Delete</button>
                                         @endif
                                     </div>
                                 @else
@@ -144,9 +152,12 @@
                                 @if ($meal->lunch_quantity !== null)
                                     <div class="flex items-center gap-2">
                                         <span>{{ number_format($meal->lunch_quantity, 2) }}</span>
+                                        @if (count($lIds) > 1)
+                                            <span class="text-xs text-gray-400">({{ count($lIds) }})</span>
+                                        @endif
                                         @if (Auth::user()->role_id === App\Enums\Role::Manager)
-                                            <button wire:click="editMeal({{ $meal->lunch_id }})" wire:loading.attr="disabled" class="disabled:opacity-50 text-gray-500 hover:text-gray-700 text-xs font-medium">Edit</button>
-                                            <button wire:click="deleteMeal({{ $meal->lunch_id }})" wire:loading.attr="disabled" wire:confirm="Are you sure you want to delete this meal?" class="disabled:opacity-50 text-red-500 hover:text-red-700 text-xs font-medium">Delete</button>
+                                            <button wire:click="editMeal({{ $lIds[0] }})" wire:loading.attr="disabled" class="disabled:opacity-50 text-gray-500 hover:text-gray-700 text-xs font-medium">Edit</button>
+                                            <button wire:click="deleteMeal({{ end($lIds) }})" wire:loading.attr="disabled" wire:confirm="Are you sure you want to delete this meal?" class="disabled:opacity-50 text-red-500 hover:text-red-700 text-xs font-medium">Delete</button>
                                         @endif
                                     </div>
                                 @else
@@ -157,9 +168,12 @@
                                 @if ($meal->dinner_quantity !== null)
                                     <div class="flex items-center gap-2">
                                         <span>{{ number_format($meal->dinner_quantity, 2) }}</span>
+                                        @if (count($dIds) > 1)
+                                            <span class="text-xs text-gray-400">({{ count($dIds) }})</span>
+                                        @endif
                                         @if (Auth::user()->role_id === App\Enums\Role::Manager)
-                                            <button wire:click="editMeal({{ $meal->dinner_id }})" wire:loading.attr="disabled" class="disabled:opacity-50 text-gray-500 hover:text-gray-700 text-xs font-medium">Edit</button>
-                                            <button wire:click="deleteMeal({{ $meal->dinner_id }})" wire:loading.attr="disabled" wire:confirm="Are you sure you want to delete this meal?" class="disabled:opacity-50 text-red-500 hover:text-red-700 text-xs font-medium">Delete</button>
+                                            <button wire:click="editMeal({{ $dIds[0] }})" wire:loading.attr="disabled" class="disabled:opacity-50 text-gray-500 hover:text-gray-700 text-xs font-medium">Edit</button>
+                                            <button wire:click="deleteMeal({{ end($dIds) }})" wire:loading.attr="disabled" wire:confirm="Are you sure you want to delete this meal?" class="disabled:opacity-50 text-red-500 hover:text-red-700 text-xs font-medium">Delete</button>
                                         @endif
                                     </div>
                                 @else

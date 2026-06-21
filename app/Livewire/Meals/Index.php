@@ -58,17 +58,13 @@ class Index extends Component
         }
 
         foreach ($this->types as $type) {
-            Meal::firstOrCreate(
-                [
-                    'member_id' => $this->member_id,
-                    'date' => $this->date,
-                    'type' => $type,
-                ],
-                [
-                    'month_id' => $activeMonth?->id,
-                    'quantity' => MealType::from((int) $type)->rate(),
-                ]
-            );
+            Meal::create([
+                'month_id' => $activeMonth?->id,
+                'member_id' => $this->member_id,
+                'date' => $this->date,
+                'type' => $type,
+                'quantity' => MealType::from((int) $type)->rate(),
+            ]);
         }
 
         $this->dispatch('toast', message: $this->editingId ? 'Meal updated successfully.' : 'Meal(s) added successfully.');
@@ -139,12 +135,12 @@ class Index extends Component
                 meals.member_id,
                 meals.date,
                 users.name as member_name,
-                MAX(CASE WHEN meals.type = 1 THEN meals.quantity END) as breakfast_quantity,
-                MAX(CASE WHEN meals.type = 2 THEN meals.quantity END) as lunch_quantity,
-                MAX(CASE WHEN meals.type = 3 THEN meals.quantity END) as dinner_quantity,
-                MAX(CASE WHEN meals.type = 1 THEN meals.id END) as breakfast_id,
-                MAX(CASE WHEN meals.type = 2 THEN meals.id END) as lunch_id,
-                MAX(CASE WHEN meals.type = 3 THEN meals.id END) as dinner_id
+                SUM(CASE WHEN meals.type = 1 THEN meals.quantity END) as breakfast_quantity,
+                SUM(CASE WHEN meals.type = 2 THEN meals.quantity END) as lunch_quantity,
+                SUM(CASE WHEN meals.type = 3 THEN meals.quantity END) as dinner_quantity,
+                GROUP_CONCAT(CASE WHEN meals.type = 1 THEN meals.id END ORDER BY meals.id SEPARATOR ',') as breakfast_ids,
+                GROUP_CONCAT(CASE WHEN meals.type = 2 THEN meals.id END ORDER BY meals.id SEPARATOR ',') as lunch_ids,
+                GROUP_CONCAT(CASE WHEN meals.type = 3 THEN meals.id END ORDER BY meals.id SEPARATOR ',') as dinner_ids
             ")
             ->groupBy('meals.member_id', 'meals.date', 'users.name')
             ->orderBy('meals.date', 'desc')
