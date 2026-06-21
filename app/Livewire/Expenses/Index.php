@@ -99,7 +99,7 @@ class Index extends Component
         $mess = Auth::user()->member->mess;
 
         $expenses = Expense::where('mess_id', $mess->id)
-            ->latest()
+            ->orderBy('id', 'desc')
             ->paginate(20);
 
         return view('livewire.expenses.index', compact('expenses'))

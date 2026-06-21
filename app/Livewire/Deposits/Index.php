@@ -110,7 +110,7 @@ class Index extends Component
         $deposits = Deposit::whereIn('member_id', $memberIds)
             ->with('member.user')
             ->when($this->filterMemberId, fn ($q) => $q->where('member_id', $this->filterMemberId))
-            ->latest()
+            ->orderBy('id', 'desc')
             ->paginate(20);
 
         return view('livewire.deposits.index', compact('deposits', 'members'))
