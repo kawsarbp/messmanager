@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Auth;
 
+use App\Enums\VisibilityStatus;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
@@ -24,6 +25,16 @@ class Login extends Component
         $this->validate();
 
         if (Auth::attempt(['email' => $this->email, 'password' => $this->password], $this->remember)) {
+            $member = Auth::user()->member;
+
+            if ($member && $member->status === VisibilityStatus::Inactive) {
+                Auth::logout();
+                session()->invalidate();
+                session()->regenerateToken();
+                $this->addError('email', 'Your account has been deactivated. Contact the manager.');
+                return;
+            }
+
             session()->regenerate();
             $this->redirect(route('dashboard'), navigate: true);
             return;
