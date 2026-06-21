@@ -1,21 +1,20 @@
 <?php
 
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\MemberController;
+use App\Livewire\Auth\Login;
+use App\Livewire\Auth\Register;
+use App\Livewire\Dashboard;
+use App\Livewire\Home;
+use App\Livewire\Members\Index as MembersIndex;
 use Illuminate\Support\Facades\Route;
 
-Route::view('/', 'home')->name('home');
+Route::get('/', Home::class)->name('home');
 
 Route::middleware('guest')->group(function () {
-    Route::get('/login', [AuthController::class, 'login'])->name('login');
-    Route::post('/login', [AuthController::class, 'authenticate'])->name('authenticate');
-    Route::get('/register', [AuthController::class, 'register'])->name('register');
-    Route::post('/register', [AuthController::class, 'store'])->name('register.store');
+    Route::get('/login', Login::class)->name('login');
+    Route::get('/register', Register::class)->name('register');
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('/dashboard', fn () => view('dashboard'))->name('dashboard');
-    Route::get('/members', [MemberController::class, 'index'])->name('members.index');
-    Route::post('/members/{member}/toggle-status', [MemberController::class, 'toggleStatus'])->name('members.toggle-status');
-    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::get('/dashboard', Dashboard::class)->name('dashboard');
+    Route::get('/members', MembersIndex::class)->name('members.index');
 });

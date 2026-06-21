@@ -1,22 +1,21 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Livewire\Members;
 
 use App\Enums\Role;
 use App\Enums\VisibilityStatus;
 use App\Models\Member;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\View\View;
+use Livewire\Component;
 
-class MemberController extends Controller
+class Index extends Component
 {
-    public function index(): View
+    public function getMembersProperty()
     {
         $user = Auth::user();
         $mess = $user->member->mess;
 
-        $members = $mess->members()
+        return $mess->members()
             ->with('user')
             ->get()
             ->sortByDesc(function ($member) use ($user) {
@@ -25,16 +24,14 @@ class MemberController extends Controller
                 return ($isManager ? 2 : 0) + ($isMe ? 1 : 0);
             })
             ->values();
-
-        return view('members.index', compact('mess', 'members'));
     }
 
-    public function toggleStatus(Member $member): RedirectResponse
+    public function toggleStatus(Member $member)
     {
         $user = Auth::user();
 
-        if ($user->role_id !== Role::Manager) {
-            abort(403);
+        if ($user->role_id !== Role::Manager || $member->user_id === $user->id) {
+            return;
         }
 
         $member->update([
@@ -43,6 +40,19 @@ class MemberController extends Controller
                 : VisibilityStatus::Active,
         ]);
 
-        return back();
+    }
+
+    public function logout()
+    {
+        Auth::logout();
+        session()->invalidate();
+        session()->regenerateToken();
+        $this->redirect('/');
+    }
+
+    public function render()
+    {
+        return view('livewire.members.index')
+            ->layout('layouts.app', ['title' => 'Members - DIU Mess Management System']);
     }
 }
