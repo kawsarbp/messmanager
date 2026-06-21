@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\MemberController;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'home')->name('home');
@@ -14,5 +15,6 @@ Route::middleware('guest')->group(function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', fn () => view('dashboard'))->name('dashboard');
+    Route::get('/members', [MemberController::class, 'index'])->name('members.index');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });

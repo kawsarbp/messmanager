@@ -12,7 +12,10 @@
     <body class="bg-white text-gray-900 min-h-screen">
         <nav class="border-b border-gray-200">
             <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
-                <span class="font-semibold text-sm">DIU Mess Management</span>
+                <div class="flex items-center gap-6">
+                    <span class="font-semibold text-sm">DIU Mess Management</span>
+                    <a href="{{ route('members.index') }}" class="text-sm text-gray-500 hover:text-gray-900 transition-colors">Members</a>
+                </div>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <button type="submit" class="text-sm text-gray-500 hover:text-gray-900 transition-colors">Logout</button>
