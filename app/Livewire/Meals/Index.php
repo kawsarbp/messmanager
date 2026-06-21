@@ -103,6 +103,15 @@ class Index extends Component
         $this->dispatch('toast', message: 'Meal deleted.');
     }
 
+    public function deleteRow($memberId, $date)
+    {
+        if (Auth::user()->role_id !== Role::Manager) {
+            return;
+        }
+        Meal::where('member_id', $memberId)->where('date', $date)->delete();
+        $this->dispatch('toast', message: 'All meals for this day deleted.');
+    }
+
     public function logout()
     {
         Auth::logout();

@@ -117,6 +117,9 @@
                         <th class="px-6 py-3 font-medium text-gray-600">Breakfast</th>
                         <th class="px-6 py-3 font-medium text-gray-600">Lunch</th>
                         <th class="px-6 py-3 font-medium text-gray-600">Dinner</th>
+                        @if (Auth::user()->role_id === App\Enums\Role::Manager)
+                            <th class="px-6 py-3 font-medium text-gray-600"></th>
+                        @endif
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
@@ -163,6 +166,11 @@
                                     <span class="text-gray-300">—</span>
                                 @endif
                             </td>
+                            @if (Auth::user()->role_id === App\Enums\Role::Manager)
+                                <td class="px-6 py-3 align-middle">
+                                    <button wire:click="deleteRow({{ $meal->member_id }}, '{{ $meal->date }}')" wire:loading.attr="disabled" wire:confirm="Delete all meals for this day?" class="disabled:opacity-50 text-red-500 hover:text-red-700 text-xs font-medium">Delete All</button>
+                                </td>
+                            @endif
                         </tr>
                     @endforeach
                 </tbody>
