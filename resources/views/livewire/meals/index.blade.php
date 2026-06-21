@@ -61,6 +61,19 @@
         </form>
         @endif
 
+        <div class="mb-6 flex items-end gap-3">
+            <div>
+                <label class="block text-xs font-medium text-gray-700 mb-1.5">Filter by member</label>
+                <select wire:model="filterMemberId" class="w-56 px-3 py-2 rounded-lg border border-gray-300 focus:border-gray-900 focus:ring-1 focus:ring-gray-900 outline-none text-sm">
+                    <option value="">All members</option>
+                    @foreach ($members as $member)
+                        <option value="{{ $member->id }}">{{ $member->user->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <button wire:click="filter" class="px-4 py-2 bg-gray-900 hover:bg-gray-800 text-white text-sm font-medium rounded-lg">Filter</button>
+        </div>
+
         <div class="border border-gray-200 rounded-xl overflow-hidden">
             <table class="w-full text-sm">
                 <thead>

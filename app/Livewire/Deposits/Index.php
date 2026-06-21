@@ -19,6 +19,7 @@ class Index extends Component
     public $date = '';
     public $note = '';
     public $editingId = null;
+    public $filterMemberId = '';
 
     protected function rules(): array
     {
@@ -33,6 +34,11 @@ class Index extends Component
     public function mount()
     {
         $this->date = now()->format('Y-m-d');
+    }
+
+    public function filter()
+    {
+        $this->resetPage();
     }
 
     public function save()
@@ -103,6 +109,7 @@ class Index extends Component
 
         $deposits = Deposit::whereIn('member_id', $memberIds)
             ->with('member.user')
+            ->when($this->filterMemberId, fn ($q) => $q->where('member_id', $this->filterMemberId))
             ->latest()
             ->paginate(20);
 

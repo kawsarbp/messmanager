@@ -21,6 +21,7 @@ class Index extends Component
     public $type = '';
     public $quantity = 1;
     public $editingId = null;
+    public $filterMemberId = '';
 
     protected function rules(): array
     {
@@ -35,6 +36,11 @@ class Index extends Component
     public function mount()
     {
         $this->date = now()->format('Y-m-d');
+    }
+
+    public function filter()
+    {
+        $this->resetPage();
     }
 
     public function updatedType($value)
@@ -114,6 +120,7 @@ class Index extends Component
 
         $meals = Meal::whereIn('member_id', $memberIds)
             ->with('member.user')
+            ->when($this->filterMemberId, fn ($q) => $q->where('member_id', $this->filterMemberId))
             ->latest()
             ->paginate(20);
 
