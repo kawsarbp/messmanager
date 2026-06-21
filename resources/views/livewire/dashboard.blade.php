@@ -1,15 +1,15 @@
 <div>
     <nav class="border-b border-gray-200">
-        <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
-            <div class="flex items-center gap-6">
-                <a href="{{ route('dashboard') }}" wire:navigate class="font-semibold text-sm text-gray-900">Dashboard</a>
-                <a href="{{ route('members.index') }}" wire:navigate class="text-sm text-gray-500 hover:text-gray-900">Members</a>
-                <a href="{{ route('deposits.index') }}" wire:navigate class="text-sm text-gray-500 hover:text-gray-900">Deposits</a>
-                <a href="{{ route('expenses.index') }}" wire:navigate class="text-sm text-gray-500 hover:text-gray-900">Expenses</a>
-                <a href="{{ route('meals.index') }}" wire:navigate class="text-sm text-gray-500 hover:text-gray-900">Meals</a>
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between gap-4 flex-wrap">
+            <div class="flex items-center gap-4 sm:gap-6 overflow-x-auto pb-1">
+                <a href="{{ route('dashboard') }}" wire:navigate class="font-semibold text-sm text-gray-900 shrink-0">Dashboard</a>
+                <a href="{{ route('members.index') }}" wire:navigate class="text-sm text-gray-500 hover:text-gray-900 shrink-0">Members</a>
+                <a href="{{ route('deposits.index') }}" wire:navigate class="text-sm text-gray-500 hover:text-gray-900 shrink-0">Deposits</a>
+                <a href="{{ route('expenses.index') }}" wire:navigate class="text-sm text-gray-500 hover:text-gray-900 shrink-0">Expenses</a>
+                <a href="{{ route('meals.index') }}" wire:navigate class="text-sm text-gray-500 hover:text-gray-900 shrink-0">Meals</a>
             </div>
-            <div class="flex items-center gap-4">
-                <a href="{{ route('profile') }}" wire:navigate class="text-sm text-gray-500 hover:text-gray-900">Profile</a>
+            <div class="flex items-center gap-3 shrink-0">
+                <a href="{{ route('profile') }}" wire:navigate class="text-sm text-gray-500 hover:text-gray-900 hidden sm:inline">Profile</a>
                 <button wire:click="logout" wire:loading.attr="disabled" wire:target="logout" class="text-sm text-gray-500 hover:text-gray-900">
                     <span wire:loading.remove wire:target="logout">Logout</span>
                     <span wire:loading wire:target="logout">Logging out...</span>
@@ -18,9 +18,9 @@
         </div>
     </nav>
 
-    <main class="max-w-5xl mx-auto px-6 py-12">
-        <div class="mb-8">
-            <h1 class="text-2xl font-bold">{{ Auth::user()->member->mess->name }}</h1>
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-12">
+        <div class="mb-6 sm:mb-8">
+            <h1 class="text-xl sm:text-2xl font-bold">{{ Auth::user()->member->mess->name }}</h1>
             <p class="text-gray-500 text-sm mt-1">Member summary &mdash; {{ $summary->count() }} members</p>
         </div>
 
@@ -71,7 +71,7 @@
         </div>
 
         @if ($summary->isEmpty())
-            <div class="border-2 border-dashed border-gray-200 rounded-xl p-12 text-center">
+            <div class="border-2 border-dashed border-gray-200 rounded-xl p-8 sm:p-12 text-center">
                 <p class="text-gray-400 text-sm">No members found.</p>
             </div>
         @endif

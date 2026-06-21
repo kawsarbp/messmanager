@@ -38,8 +38,11 @@
             </div>
 
             <button type="submit"
-                    class="w-full bg-gray-900 hover:bg-gray-800 text-white font-semibold py-2.5 rounded-lg transition-colors text-sm">
-                Sign in
+                    wire:loading.attr="disabled"
+                    wire:target="authenticate"
+                    class="w-full bg-gray-900 hover:bg-gray-800 disabled:opacity-50 text-white font-semibold py-2.5 rounded-lg transition-colors text-sm">
+                <span wire:loading.remove wire:target="authenticate">Sign in</span>
+                <span wire:loading wire:target="authenticate">Signing in...</span>
             </button>
         </form>
 

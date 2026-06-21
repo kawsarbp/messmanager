@@ -1,14 +1,14 @@
 <div>
     <nav class="border-b border-gray-200">
-        <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
-            <div class="flex items-center gap-6">
-                <a href="{{ route('dashboard') }}" wire:navigate class="font-semibold text-sm text-gray-900">DIU Mess Management</a>
-                <a href="{{ route('members.index') }}" wire:navigate class="text-sm text-gray-500 hover:text-gray-900">Members</a>
-                <a href="{{ route('deposits.index') }}" wire:navigate class="text-sm text-gray-500 hover:text-gray-900">Deposits</a>
-                <a href="{{ route('expenses.index') }}" wire:navigate class="text-sm text-gray-500 hover:text-gray-900">Expenses</a>
-                <a href="{{ route('meals.index') }}" wire:navigate class="text-sm text-gray-500 hover:text-gray-900">Meals</a>
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between gap-4 flex-wrap">
+            <div class="flex items-center gap-4 sm:gap-6 overflow-x-auto pb-1">
+                <a href="{{ route('dashboard') }}" wire:navigate class="font-semibold text-sm text-gray-900 shrink-0">Dashboard</a>
+                <a href="{{ route('members.index') }}" wire:navigate class="text-sm text-gray-500 hover:text-gray-900 shrink-0">Members</a>
+                <a href="{{ route('deposits.index') }}" wire:navigate class="text-sm text-gray-500 hover:text-gray-900 shrink-0">Deposits</a>
+                <a href="{{ route('expenses.index') }}" wire:navigate class="text-sm text-gray-500 hover:text-gray-900 shrink-0">Expenses</a>
+                <a href="{{ route('meals.index') }}" wire:navigate class="text-sm text-gray-500 hover:text-gray-900 shrink-0">Meals</a>
             </div>
-            <div class="flex items-center gap-4">
+            <div class="flex items-center gap-3 shrink-0">
                 <a href="{{ route('profile') }}" wire:navigate class="text-sm text-gray-900 font-medium">Profile</a>
                 <button wire:click="logout" wire:loading.attr="disabled" wire:target="logout" class="text-sm text-gray-500 hover:text-gray-900">
                     <span wire:loading.remove wire:target="logout">Logout</span>
@@ -18,12 +18,12 @@
         </div>
     </nav>
 
-    <main class="max-w-5xl mx-auto px-6 py-12">
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-12">
         <div class="max-w-lg mx-auto">
-            <h1 class="text-2xl font-bold mb-2">Profile</h1>
-            <p class="text-gray-500 text-sm mb-8">Manage your account information</p>
+            <h1 class="text-xl sm:text-2xl font-bold mb-2">Profile</h1>
+            <p class="text-gray-500 text-sm mb-6 sm:mb-8">Manage your account information</p>
 
-            <form wire:submit="save" class="p-6 border border-gray-200 rounded-xl space-y-5">
+            <form wire:submit="save" class="p-4 sm:p-6 border border-gray-200 rounded-xl space-y-5">
                 <div>
                     <label class="block text-xs font-medium text-gray-700 mb-1">Name</label>
                     <input type="text" wire:model.blur="name" class="w-full px-3 py-2.5 rounded-lg border border-gray-300 focus:border-gray-900 focus:ring-1 focus:ring-gray-900 outline-none text-sm">

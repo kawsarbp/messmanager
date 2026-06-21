@@ -55,8 +55,11 @@
             </div>
 
             <button type="submit"
-                    class="w-full bg-gray-900 hover:bg-gray-800 text-white font-semibold py-2.5 rounded-lg transition-colors text-sm">
-                Register
+                    wire:loading.attr="disabled"
+                    wire:target="register"
+                    class="w-full bg-gray-900 hover:bg-gray-800 disabled:opacity-50 text-white font-semibold py-2.5 rounded-lg transition-colors text-sm">
+                <span wire:loading.remove wire:target="register">Register</span>
+                <span wire:loading wire:target="register">Registering...</span>
             </button>
         </form>
 

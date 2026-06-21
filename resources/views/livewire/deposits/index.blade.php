@@ -1,15 +1,15 @@
 <div>
     <nav class="border-b border-gray-200">
-        <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
-            <div class="flex items-center gap-6">
-                <a href="{{ route('dashboard') }}" wire:navigate class="font-semibold text-sm text-gray-900">Dashboard</a>
-                <a href="{{ route('members.index') }}" wire:navigate class="text-sm text-gray-500 hover:text-gray-900">Members</a>
-                <a href="{{ route('deposits.index') }}" wire:navigate class="text-sm text-gray-900 font-medium">Deposits</a>
-                <a href="{{ route('expenses.index') }}" wire:navigate class="text-sm text-gray-500 hover:text-gray-900">Expenses</a>
-                <a href="{{ route('meals.index') }}" wire:navigate class="text-sm text-gray-500 hover:text-gray-900">Meals</a>
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between gap-4 flex-wrap">
+            <div class="flex items-center gap-4 sm:gap-6 overflow-x-auto pb-1">
+                <a href="{{ route('dashboard') }}" wire:navigate class="font-semibold text-sm text-gray-900 shrink-0">Dashboard</a>
+                <a href="{{ route('members.index') }}" wire:navigate class="text-sm text-gray-500 hover:text-gray-900 shrink-0">Members</a>
+                <a href="{{ route('deposits.index') }}" wire:navigate class="text-sm text-gray-900 font-medium shrink-0">Deposits</a>
+                <a href="{{ route('expenses.index') }}" wire:navigate class="text-sm text-gray-500 hover:text-gray-900 shrink-0">Expenses</a>
+                <a href="{{ route('meals.index') }}" wire:navigate class="text-sm text-gray-500 hover:text-gray-900 shrink-0">Meals</a>
             </div>
-            <div class="flex items-center gap-4">
-                <a href="{{ route('profile') }}" wire:navigate class="text-sm text-gray-500 hover:text-gray-900">Profile</a>
+            <div class="flex items-center gap-3 shrink-0">
+                <a href="{{ route('profile') }}" wire:navigate class="text-sm text-gray-500 hover:text-gray-900 hidden sm:inline">Profile</a>
                 <button wire:click="logout" wire:loading.attr="disabled" wire:target="logout" class="text-sm text-gray-500 hover:text-gray-900">
                     <span wire:loading.remove wire:target="logout">Logout</span>
                     <span wire:loading wire:target="logout">Logging out...</span>
@@ -18,10 +18,8 @@
         </div>
     </nav>
 
-    <main class="max-w-5xl mx-auto px-6 py-12">
-        <div class="flex items-center justify-between mb-8">
-            <h1 class="text-2xl font-bold">Deposits</h1>
-        </div>
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-12">
+        <h1 class="text-xl sm:text-2xl font-bold mb-6 sm:mb-8">Deposits</h1>
 
         @if (Auth::user()->role_id === App\Enums\Role::Manager)
         <form wire:submit="save" class="mb-10 p-6 border border-gray-200 rounded-xl">
@@ -64,23 +62,24 @@
         </form>
         @endif
 
-        <div class="mb-6 flex items-end gap-3">
-            <div>
+        <div class="mb-6 flex flex-col sm:flex-row items-start sm:items-end gap-3">
+            <div class="w-full sm:w-auto">
                 <label class="block text-xs font-medium text-gray-700 mb-1.5">Filter by member</label>
-                <select wire:model="filterMemberId" class="w-56 px-3 py-2 rounded-lg border border-gray-300 focus:border-gray-900 focus:ring-1 focus:ring-gray-900 outline-none text-sm">
+                <select wire:model="filterMemberId" class="w-full sm:w-56 px-3 py-2 rounded-lg border border-gray-300 focus:border-gray-900 focus:ring-1 focus:ring-gray-900 outline-none text-sm">
                     <option value="">All members</option>
                     @foreach ($members as $member)
                         <option value="{{ $member->id }}">{{ $member->user->name }}</option>
                     @endforeach
                 </select>
             </div>
-            <button wire:click="filter" wire:loading.attr="disabled" wire:target="filter" class="px-4 py-2 bg-gray-900 hover:bg-gray-800 disabled:opacity-50 text-white text-sm font-medium rounded-lg">
+            <button wire:click="filter" wire:loading.attr="disabled" wire:target="filter" class="w-full sm:w-auto px-4 py-2 bg-gray-900 hover:bg-gray-800 disabled:opacity-50 text-white text-sm font-medium rounded-lg">
                 <span wire:loading.remove wire:target="filter">Filter</span>
                 <span wire:loading wire:target="filter">Loading...</span>
             </button>
         </div>
 
         <div class="border border-gray-200 rounded-xl overflow-hidden">
+            <div class="overflow-x-auto">
             <table class="w-full text-sm">
                 <thead>
                     <tr class="bg-gray-50 text-left">
@@ -113,8 +112,9 @@
                     @endforeach
                 </tbody>
             </table>
+            </div>
             @if ($deposits->isEmpty())
-                <div class="p-12 text-center text-gray-400 text-sm">No deposits yet.</div>
+                <div class="p-8 sm:p-12 text-center text-gray-400 text-sm">No deposits yet.</div>
             @endif
         </div>
 
