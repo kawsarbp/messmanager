@@ -136,11 +136,11 @@
                     <p class="text-gray-500 text-sm mt-1">Manage monthly periods for {{ $mess->name }}</p>
                 </div>
                 <div class="flex items-center gap-2 shrink-0">
-                    <span class="text-xs font-mono font-bold text-gray-700 bg-gray-100 px-3 py-1.5 rounded-lg border border-gray-200">{{ $mess->code }}</span>
+                    <span class="inline-block min-w-[8ch] text-center text-xs font-mono font-bold text-gray-700 bg-gray-100 px-3 py-1.5 rounded-lg border border-gray-200">{{ $mess->code }}</span>
                     @if (Auth::user()->role_id === App\Enums\Role::Manager)
-                        <button wire:click="refreshCode" wire:loading.attr="disabled" wire:target="refreshCode" class="p-1.5 text-gray-500 hover:text-gray-700 disabled:opacity-50" title="Generate new code">
-                            <svg wire:loading.remove wire:target="refreshCode" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182"/></svg>
-                            <svg wire:loading wire:target="refreshCode" class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182"/></svg>
+                        <button wire:click="refreshCode" wire:loading.attr="disabled" wire:target="refreshCode" class="p-1.5 text-gray-500 hover:text-gray-700 disabled:opacity-50 size-7 flex items-center justify-center" title="Generate new code">
+                            <svg wire:loading.remove wire:target="refreshCode" class="size-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182"/></svg>
+                            <svg wire:loading wire:target="refreshCode" class="size-4 shrink-0 animate-spin" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182"/></svg>
                         </button>
                     @endif
                 </div>
