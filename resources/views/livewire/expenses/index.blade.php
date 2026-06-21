@@ -2,13 +2,16 @@
     <nav class="border-b border-gray-200">
         <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
             <div class="flex items-center gap-6">
-                <a href="{{ route('dashboard') }}" wire:navigate class="font-semibold text-sm text-gray-900">DIU Mess Management</a>
+                <a href="{{ route('dashboard') }}" wire:navigate class="font-semibold text-sm text-gray-900">Dashboard</a>
                 <a href="{{ route('members.index') }}" wire:navigate class="text-sm text-gray-500 hover:text-gray-900">Members</a>
                 <a href="{{ route('deposits.index') }}" wire:navigate class="text-sm text-gray-500 hover:text-gray-900">Deposits</a>
                 <a href="{{ route('expenses.index') }}" wire:navigate class="text-sm text-gray-900 font-medium">Expenses</a>
                 <a href="{{ route('meals.index') }}" wire:navigate class="text-sm text-gray-500 hover:text-gray-900">Meals</a>
             </div>
-            <button wire:click="logout" class="text-sm text-gray-500 hover:text-gray-900">Logout</button>
+            <button wire:click="logout" wire:loading.attr="disabled" wire:target="logout" class="text-sm text-gray-500 hover:text-gray-900">
+                <span wire:loading.remove wire:target="logout">Logout</span>
+                <span wire:loading wire:target="logout">Logging out...</span>
+            </button>
         </div>
     </nav>
 
@@ -42,7 +45,10 @@
                 </div>
             </div>
             <div class="flex items-center gap-3">
-                <button type="submit" class="bg-gray-900 hover:bg-gray-800 text-white text-sm font-semibold px-5 py-2 rounded-lg">{{ $editingId ? 'Update' : 'Add Expense' }}</button>
+                <button type="submit" wire:loading.attr="disabled" wire:target="save" class="bg-gray-900 hover:bg-gray-800 disabled:opacity-50 text-white text-sm font-semibold px-5 py-2 rounded-lg">
+                    <span wire:loading.remove wire:target="save">{{ $editingId ? 'Update' : 'Add Expense' }}</span>
+                    <span wire:loading wire:target="save">Submitting...</span>
+                </button>
                 @if ($editingId)
                     <button type="button" wire:click="cancelEdit" class="text-sm text-gray-500 hover:text-gray-700 font-medium">Cancel</button>
                 @endif
@@ -73,10 +79,10 @@
                             <td class="px-6 py-3 text-gray-500">{{ $expense->description ?: '-' }}</td>
                             @if (Auth::user()->role_id === App\Enums\Role::Manager)
                                 <td class="px-6 py-3 text-right">
-                                    <button wire:click="editExpense({{ $expense->id }})" class="text-gray-500 hover:text-gray-700 text-xs font-medium">Edit</button>
+                                    <button wire:click="editExpense({{ $expense->id }})" wire:loading.attr="disabled" wire:target="editExpense({{ $expense->id }})" class="disabled:opacity-50 text-gray-500 hover:text-gray-700 text-xs font-medium">Edit</button>
                                 </td>
                                 <td class="px-6 py-3 text-right">
-                                    <button wire:click="deleteExpense({{ $expense->id }})" wire:confirm="Are you sure you want to delete this expense?" class="text-red-500 hover:text-red-700 text-xs font-medium">Delete</button>
+                                    <button wire:click="deleteExpense({{ $expense->id }})" wire:loading.attr="disabled" wire:target="deleteExpense({{ $expense->id }})" wire:confirm="Are you sure you want to delete this expense?" class="disabled:opacity-50 text-red-500 hover:text-red-700 text-xs font-medium">Delete</button>
                                 </td>
                             @endif
                         </tr>

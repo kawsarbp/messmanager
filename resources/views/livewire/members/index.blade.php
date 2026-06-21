@@ -2,13 +2,16 @@
     <nav class="border-b border-gray-200">
         <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
             <div class="flex items-center gap-6">
-                <a href="{{ route('dashboard') }}" wire:navigate class="font-semibold text-sm text-gray-900">DIU Mess Management</a>
+                <a href="{{ route('dashboard') }}" wire:navigate class="font-semibold text-sm text-gray-900">Dashboard</a>
                 <a href="{{ route('members.index') }}" wire:navigate class="text-sm text-gray-900 font-medium">Members</a>
                 <a href="{{ route('deposits.index') }}" wire:navigate class="text-sm text-gray-500 hover:text-gray-900">Deposits</a>
                 <a href="{{ route('expenses.index') }}" wire:navigate class="text-sm text-gray-500 hover:text-gray-900">Expenses</a>
                 <a href="{{ route('meals.index') }}" wire:navigate class="text-sm text-gray-500 hover:text-gray-900">Meals</a>
             </div>
-            <button wire:click="logout" class="text-sm text-gray-500 hover:text-gray-900 transition-colors">Logout</button>
+            <button wire:click="logout" wire:loading.attr="disabled" wire:target="logout" class="text-sm text-gray-500 hover:text-gray-900">
+                <span wire:loading.remove wire:target="logout">Logout</span>
+                <span wire:loading wire:target="logout">Logging out...</span>
+            </button>
         </div>
     </nav>
 
@@ -48,9 +51,12 @@
                         @endif
                         @if (Auth::user()->role_id === App\Enums\Role::Manager && $member->user_id !== Auth::id())
                             <button wire:click="toggleStatus({{ $member->id }})"
+                                    wire:loading.attr="disabled"
+                                    wire:target="toggleStatus({{ $member->id }})"
                                     wire:confirm="Are you sure you want to {{ $member->status === App\Enums\VisibilityStatus::Active ? 'deactivate' : 'activate' }} this member?"
-                                    class="text-xs font-medium text-gray-500 hover:text-gray-900 underline transition-colors">
-                                {{ $member->status === App\Enums\VisibilityStatus::Active ? 'Deactivate' : 'Activate' }}
+                                    class="disabled:opacity-50 text-xs font-medium text-gray-500 hover:text-gray-900 underline transition-colors">
+                                <span wire:loading.remove wire:target="toggleStatus({{ $member->id }})">{{ $member->status === App\Enums\VisibilityStatus::Active ? 'Deactivate' : 'Activate' }}</span>
+                                <span wire:loading wire:target="toggleStatus({{ $member->id }})">Processing...</span>
                             </button>
                         @endif
                     </div>

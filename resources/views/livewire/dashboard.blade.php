@@ -8,7 +8,10 @@
                 <a href="{{ route('expenses.index') }}" wire:navigate class="text-sm text-gray-500 hover:text-gray-900">Expenses</a>
                 <a href="{{ route('meals.index') }}" wire:navigate class="text-sm text-gray-500 hover:text-gray-900">Meals</a>
             </div>
-            <button wire:click="logout" class="text-sm text-gray-500 hover:text-gray-900 transition-colors">Logout</button>
+            <button wire:click="logout" wire:loading.attr="disabled" wire:target="logout" class="text-sm text-gray-500 hover:text-gray-900">
+                <span wire:loading.remove wire:target="logout">Logout</span>
+                <span wire:loading wire:target="logout">Logging out...</span>
+            </button>
         </div>
     </nav>
 
