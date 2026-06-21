@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Str;
 
 class Mess extends Model
 {
@@ -15,6 +16,18 @@ class Mess extends Model
         'created_at',
         'updated_at',
     ];
+
+    public static function generateUniqueCode(): string
+    {
+        $length = random_int(3, 5);
+        $code = 'DIU' . Str::upper(Str::random($length));
+
+        while (static::where('code', $code)->exists()) {
+            $code = 'DIU' . Str::upper(Str::random($length));
+        }
+
+        return $code;
+    }
 
     public function members(): HasMany
     {

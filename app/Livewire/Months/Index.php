@@ -3,6 +3,7 @@
 namespace App\Livewire\Months;
 
 use App\Enums\Role;
+use App\Models\Mess;
 use App\Models\Month;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
@@ -66,6 +67,18 @@ class Index extends Component
         $this->dispatch('toast', message: 'Month closed successfully. A new month has started.');
     }
 
+    public function refreshCode(): void
+    {
+        if (Auth::user()->role_id !== Role::Manager) {
+            return;
+        }
+
+        $mess = Auth::user()->member->mess;
+        $mess->update(['code' => Mess::generateUniqueCode()]);
+
+        $this->dispatch('toast', message: 'Mess code updated.');
+    }
+
     public function logout(): void
     {
         Auth::logout();
@@ -87,7 +100,7 @@ class Index extends Component
             $viewingMonth = $months->firstWhere('id', $this->viewingMonthId);
         }
 
-        return view('livewire.months.index', compact('months', 'activeMonth', 'viewingMonth'))
+        return view('livewire.months.index', compact('mess', 'months', 'activeMonth', 'viewingMonth'))
             ->layout('layouts.app', ['title' => 'Months - DIU Mess Management System']);
     }
 }
