@@ -33,6 +33,13 @@ class Index extends Component
         ];
     }
 
+    protected function validationAttributes(): array
+    {
+        return [
+            'member_id' => 'member',
+        ];
+    }
+
     public function mount()
     {
         $this->date = now()->format('Y-m-d');
