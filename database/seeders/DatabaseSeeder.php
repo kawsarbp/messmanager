@@ -17,17 +17,34 @@ class DatabaseSeeder extends Seeder
             'code' => 'DIU2026',
             'address' => 'Dhaka International University, Dhaka',
         ]);
+        $users = [
+            [
+                'name' => 'Manager',
+                'email' => 'manger@gmail.com',
+                'password' => bcrypt('password'),
+                'role_id' => Role::Manager,
+            ],
+            [
+                'name' => 'Member',
+                'email' => 'member@gmail.com',
+                'password' => bcrypt('password'),
+                'role_id' => Role::Member,
+            ],
+            [
+                'name' => 'Dev Member',
+                'email' => 'dev@gmail.com',
+                'password' => bcrypt('password'),
+                'role_id' => Role::Member,
+            ],
+        ];
 
-        $user = User::create([
-            'name' => 'Admin',
-            'email' => 'admin@gmail.com',
-            'password' => bcrypt('password'),
-            'role_id' => Role::Manager,
-        ]);
+        foreach ($users as $data) {
+            $user = User::create($data);
 
-        Member::create([
-            'mess_id' => $mess->id,
-            'user_id' => $user->id,
-        ]);
+            Member::create([
+                'mess_id' => $mess->id,
+                'user_id' => $user->id,
+            ]);
+        }
     }
 }

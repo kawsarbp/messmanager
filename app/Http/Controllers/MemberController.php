@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Enums\Role;
+use App\Enums\VisibilityStatus;
+use App\Models\Member;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
@@ -24,5 +27,22 @@ class MemberController extends Controller
             ->values();
 
         return view('members.index', compact('mess', 'members'));
+    }
+
+    public function toggleStatus(Member $member): RedirectResponse
+    {
+        $user = Auth::user();
+
+        if ($user->role_id !== Role::Manager) {
+            abort(403);
+        }
+
+        $member->update([
+            'status' => $member->status === VisibilityStatus::Active
+                ? VisibilityStatus::Inactive
+                : VisibilityStatus::Active,
+        ]);
+
+        return back();
     }
 }

@@ -16,5 +16,6 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', fn () => view('dashboard'))->name('dashboard');
     Route::get('/members', [MemberController::class, 'index'])->name('members.index');
+    Route::post('/members/{member}/toggle-status', [MemberController::class, 'toggleStatus'])->name('members.toggle-status');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });

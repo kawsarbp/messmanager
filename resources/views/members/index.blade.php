@@ -51,6 +51,21 @@
                                 <p class="text-xs text-gray-400">{{ $member->user->email }}</p>
                             </div>
                         </div>
+                        <div class="flex items-center gap-3">
+                            @if ($member->status === App\Enums\VisibilityStatus::Active)
+                                <span class="text-xs font-medium text-green-600 bg-green-50 px-2 py-0.5 rounded-full">Active</span>
+                            @else
+                                <span class="text-xs font-medium text-red-600 bg-red-50 px-2 py-0.5 rounded-full">Inactive</span>
+                            @endif
+                            @if (Auth::user()->role_id === App\Enums\Role::Manager && $member->user_id !== Auth::id())
+                                <form method="POST" action="{{ route('members.toggle-status', $member) }}" onsubmit="return confirm('Are you sure you want to {{ $member->status === App\Enums\VisibilityStatus::Active ? 'deactivate' : 'activate' }} this member?')">
+                                    @csrf
+                                    <button type="submit" class="text-xs font-medium text-gray-500 hover:text-gray-900 underline transition-colors">
+                                        {{ $member->status === App\Enums\VisibilityStatus::Active ? 'Deactivate' : 'Activate' }}
+                                    </button>
+                                </form>
+                            @endif
+                        </div>
                     </div>
                 @endforeach
             </div>
