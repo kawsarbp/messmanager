@@ -38,23 +38,13 @@
                 Simplify your mess operations — manage members, track expenses, plan meals, and stay organized effortlessly.
             </p>
 
-            @if (Route::has('login'))
-                <a href="{{ route('login') }}"
-                   class="inline-flex items-center gap-2 bg-gray-900 hover:bg-gray-800 text-white font-semibold px-8 py-3.5 sm:px-10 sm:py-4 rounded-xl transition-all duration-200 text-base sm:text-lg">
-                    Get Started
-                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
-                    </svg>
-                </a>
-            @else
-                <a href="#"
-                   class="inline-flex items-center gap-2 bg-gray-900 hover:bg-gray-800 text-white font-semibold px-8 py-3.5 sm:px-10 sm:py-4 rounded-xl transition-all duration-200 text-base sm:text-lg">
-                    Get Started
-                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
-                    </svg>
-                </a>
-            @endif
+            <a href="{{ route('login') }}"
+               class="inline-flex items-center gap-2 bg-gray-900 hover:bg-gray-800 text-white font-semibold px-8 py-3.5 sm:px-10 sm:py-4 rounded-xl transition-all duration-200 text-base sm:text-lg">
+                Get Started
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+                </svg>
+            </a>
 
             <p class="mt-8 text-xs sm:text-sm text-gray-400">
                 &copy; {{ date('Y') }} DIU Mess Management System. All rights reserved.

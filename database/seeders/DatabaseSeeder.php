@@ -2,24 +2,32 @@
 
 namespace Database\Seeders;
 
+use App\Enums\Role;
+use App\Models\Member;
+use App\Models\Mess;
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    use WithoutModelEvents;
-
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
-        // User::factory(10)->create();
+        $mess = Mess::create([
+            'name' => 'DIU Main Mess',
+            'code' => 'DIU2026',
+            'address' => 'Dhaka International University, Dhaka',
+        ]);
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        $user = User::create([
+            'name' => 'Admin',
+            'email' => 'admin@gmail.com',
+            'password' => bcrypt('password'),
+            'role_id' => Role::Manager,
+        ]);
+
+        Member::create([
+            'mess_id' => $mess->id,
+            'user_id' => $user->id,
         ]);
     }
 }
