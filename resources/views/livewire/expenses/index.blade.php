@@ -64,7 +64,7 @@
                     @foreach ($expenses as $expense)
                         <tr>
                             <td class="px-6 py-3">{{ $expense->category }}</td>
-                            <td class="px-6 py-3 font-medium">${{ number_format($expense->amount, 2) }}</td>
+                            <td class="px-6 py-3 font-medium"><span class="font-bold text-lg mr-0.5">&#2547;</span>{{ number_format($expense->amount, 2) }}</td>
                             <td class="px-6 py-3 text-gray-500">{{ $expense->date->format('M d, Y') }}</td>
                             <td class="px-6 py-3 text-gray-500">{{ $expense->description ?: '-' }}</td>
                             <td class="px-6 py-3 text-right">
