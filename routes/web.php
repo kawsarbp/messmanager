@@ -8,6 +8,7 @@ use App\Livewire\Expenses\Index as ExpensesIndex;
 use App\Livewire\Home;
 use App\Livewire\Meals\Index as MealsIndex;
 use App\Livewire\Members\Index as MembersIndex;
+use App\Livewire\Manager\Transfer as ManagerTransfer;
 use App\Livewire\Profile\Index as ProfileIndex;
 use Illuminate\Support\Facades\Route;
 
@@ -25,4 +26,5 @@ Route::middleware('auth')->group(function () {
     Route::get('/expenses', ExpensesIndex::class)->name('expenses.index');
     Route::get('/meals', MealsIndex::class)->name('meals.index');
     Route::get('/profile', ProfileIndex::class)->name('profile');
+    Route::get('/manager/transfer', ManagerTransfer::class)->name('manager.transfer');
 });

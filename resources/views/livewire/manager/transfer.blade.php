@@ -2,7 +2,7 @@
     <nav class="border-b border-gray-200">
         <div class="max-w-5xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between gap-4">
             <div class="flex items-center gap-4 sm:gap-6 overflow-x-auto pb-1 flex-1 min-w-0">
-                <a href="{{ route('dashboard') }}" wire:navigate class="font-semibold text-sm text-gray-900 shrink-0">Dashboard</a>
+                <a href="{{ route('dashboard') }}" wire:navigate class="text-sm text-gray-500 hover:text-gray-900 shrink-0">Dashboard</a>
                 <a href="{{ route('members.index') }}" wire:navigate class="text-sm text-gray-500 hover:text-gray-900 shrink-0">Members</a>
                 <a href="{{ route('deposits.index') }}" wire:navigate class="text-sm text-gray-500 hover:text-gray-900 shrink-0">Deposits</a>
                 <a href="{{ route('expenses.index') }}" wire:navigate class="text-sm text-gray-500 hover:text-gray-900 shrink-0">Expenses</a>
@@ -10,7 +10,7 @@
             </div>
             <div class="relative shrink-0" x-data="{ open: false }" @click.outside="open = false">
                 <button @click="open = ! open" class="flex items-center gap-1.5 text-sm text-gray-700 hover:text-gray-900">
-                    <div class="w-8 h-8  flex items-center justify-center text-xs font-medium text-gray-600">
+                    <div class="w-8 h-8 flex items-center justify-center text-xs font-medium text-gray-600">
                         Setting
                     </div>
                     <svg class="w-4 h-4 transition-transform" :class="{ 'rotate-180': open }" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -43,47 +43,35 @@
     </nav>
 
     <main class="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-12">
-        <div class="max-w-lg mx-auto">
-            <h1 class="text-xl sm:text-2xl font-bold mb-2">Profile</h1>
-            <p class="text-gray-500 text-sm mb-6 sm:mb-8">Manage your account information</p>
+        <div class="mb-6 sm:mb-8">
+            <h1 class="text-xl sm:text-2xl font-bold">Transfer Manager</h1>
+            <p class="text-gray-500 text-sm mt-1">Select a member to transfer the manager role. You will be demoted to a regular member and logged out.</p>
+        </div>
 
-            <form wire:submit="save" class="p-4 sm:p-6 border border-gray-200 rounded-xl space-y-5">
-                <div>
-                    <label class="block text-xs font-medium text-gray-700 mb-1">Name</label>
-                    <input type="text" wire:model.blur="name" class="w-full px-3 py-2.5 rounded-lg border border-gray-300 focus:border-gray-900 focus:ring-1 focus:ring-gray-900 outline-none text-sm">
-                    @error('name') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-                </div>
-
-                <div>
-                    <label class="block text-xs font-medium text-gray-700 mb-1">Email</label>
-                    <input type="email" wire:model.blur="email" class="w-full px-3 py-2.5 rounded-lg border border-gray-300 focus:border-gray-900 focus:ring-1 focus:ring-gray-900 outline-none text-sm">
-                    @error('email') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-                </div>
-
-                <div class="border-t border-gray-100 pt-5">
-                    <h2 class="font-semibold text-sm mb-4">Change Password (optional)</h2>
-
-                    <div class="space-y-4">
-                        <div>
-                            <label class="block text-xs font-medium text-gray-700 mb-1">New Password</label>
-                            <input type="password" wire:model.blur="new_password" class="w-full px-3 py-2.5 rounded-lg border border-gray-300 focus:border-gray-900 focus:ring-1 focus:ring-gray-900 outline-none text-sm">
-                            @error('new_password') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+        <div class="border border-gray-200 rounded-xl overflow-hidden">
+            @forelse ($members as $member)
+                <div class="flex items-center justify-between px-4 sm:px-6 py-4 {{ !$loop->last ? 'border-b border-gray-100' : '' }}">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-sm font-medium text-gray-600 shrink-0">
+                            {{ $member->user->initials() }}
                         </div>
-
                         <div>
-                            <label class="block text-xs font-medium text-gray-700 mb-1">Confirm New Password</label>
-                            <input type="password" wire:model.blur="new_password_confirmation" class="w-full px-3 py-2.5 rounded-lg border border-gray-300 focus:border-gray-900 focus:ring-1 focus:ring-gray-900 outline-none text-sm">
+                            <div class="font-medium text-sm">{{ $member->user->name }}</div>
+                            <p class="text-xs text-gray-400">{{ $member->user->email }}</p>
                         </div>
                     </div>
-                </div>
-
-                <div class="flex items-center gap-3 pt-2">
-                    <button type="submit" wire:loading.attr="disabled" wire:target="save" class="bg-gray-900 hover:bg-gray-800 disabled:opacity-50 text-white text-sm font-semibold px-5 py-2 rounded-lg">
-                        <span wire:loading.remove wire:target="save">Save</span>
-                        <span wire:loading wire:target="save">Saving...</span>
+                    <button wire:click="transfer({{ $member->id }})"
+                            wire:loading.attr="disabled"
+                            wire:target="transfer({{ $member->id }})"
+                            wire:confirm="Transfer manager role to {{ $member->user->name }}? You will be demoted to a regular member and logged out."
+                            class="shrink-0 px-4 py-2 bg-gray-900 hover:bg-gray-800 disabled:opacity-50 text-white text-xs font-medium rounded-lg">
+                        <span wire:loading.remove wire:target="transfer({{ $member->id }})">Make Manager</span>
+                        <span wire:loading wire:target="transfer({{ $member->id }})">Transferring...</span>
                     </button>
                 </div>
-            </form>
+            @empty
+                <div class="p-8 sm:p-12 text-center text-gray-400 text-sm">No other members to transfer to.</div>
+            @endforelse
         </div>
     </main>
 </div>
