@@ -8,7 +8,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Meal extends Model
 {
-    protected $fillable = ['member_id', 'date', 'type', 'quantity'];
+    protected $fillable = ['month_id', 'member_id', 'date', 'type', 'quantity'];
+
+    public function month(): BelongsTo
+    {
+        return $this->belongsTo(Month::class);
+    }
 
     protected function casts(): array
     {

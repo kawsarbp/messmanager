@@ -20,4 +20,24 @@ class Mess extends Model
     {
         return $this->hasMany(Member::class);
     }
+
+    public function months(): HasMany
+    {
+        return $this->hasMany(Month::class);
+    }
+
+    public function activeMonth(): Month
+    {
+        $month = $this->months()->where('is_active', true)->first();
+
+        if (!$month) {
+            $month = $this->months()->create([
+                'label' => now()->format('F Y'),
+                'start_date' => now()->toDateString(),
+                'is_active' => true,
+            ]);
+        }
+
+        return $month;
+    }
 }

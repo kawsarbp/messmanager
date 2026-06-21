@@ -25,18 +25,23 @@ class Dashboard extends Component
         $user = Auth::user();
         $mess = $user->member->mess;
         $currentMemberId = $user->member->id;
+        $activeMonth = $mess->activeMonth();
 
         $members = Member::with('user')->where('mess_id', $mess->id)->where('status', VisibilityStatus::Active)->get();
         $memberIds = $members->pluck('id');
 
-        $totalExpenses = Expense::where('mess_id', $mess->id)->sum('amount');
+        $totalExpenses = Expense::where('mess_id', $mess->id)
+            ->when($activeMonth, fn ($q) => $q->where('month_id', $activeMonth->id))
+            ->sum('amount');
 
         $deposits = Deposit::whereIn('member_id', $memberIds)
+            ->when($activeMonth, fn ($q) => $q->where('month_id', $activeMonth->id))
             ->selectRaw('member_id, sum(amount) as total')
             ->groupBy('member_id')
             ->pluck('total', 'member_id');
 
         $meals = Meal::whereIn('member_id', $memberIds)
+            ->when($activeMonth, fn ($q) => $q->where('month_id', $activeMonth->id))
             ->selectRaw('member_id, sum(quantity) as total')
             ->groupBy('member_id')
             ->pluck('total', 'member_id');

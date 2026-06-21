@@ -49,9 +49,12 @@ class Index extends Component
 
         $this->validate();
 
+        $activeMonth = Auth::user()->member->mess->activeMonth();
+
         Deposit::updateOrCreate(
             ['id' => $this->editingId],
             [
+                'month_id' => $activeMonth?->id,
                 'member_id' => $this->member_id,
                 'amount' => $this->amount,
                 'date' => $this->date,
@@ -107,7 +110,10 @@ class Index extends Component
 
         $members = Member::with('user')->whereIn('id', $memberIds)->orderBy('id')->get();
 
+        $activeMonth = $mess->activeMonth();
+
         $deposits = Deposit::whereIn('member_id', $memberIds)
+            ->when($activeMonth, fn ($q) => $q->where('month_id', $activeMonth->id))
             ->with('member.user')
             ->when($this->filterMemberId, fn ($q) => $q->where('member_id', $this->filterMemberId))
             ->orderBy('id', 'desc')

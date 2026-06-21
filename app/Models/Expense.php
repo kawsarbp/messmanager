@@ -7,7 +7,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Expense extends Model
 {
-    protected $fillable = ['mess_id', 'amount', 'category', 'description', 'date'];
+    protected $fillable = ['month_id', 'mess_id', 'amount', 'category', 'description', 'date'];
+
+    public function month(): BelongsTo
+    {
+        return $this->belongsTo(Month::class);
+    }
 
     protected function casts(): array
     {

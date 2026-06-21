@@ -19,20 +19,32 @@ class DatabaseSeeder extends Seeder
         ]);
         $users = [
             [
-                'name' => 'Manager',
-                'email' => 'manager@gmail.com',
+                'name' => 'Kawsar Ahmed',
+                'email' => 'kawsar@gmail.com',
                 'password' => bcrypt('password'),
                 'role_id' => Role::Manager,
             ],
             [
-                'name' => 'Member',
-                'email' => 'member@gmail.com',
+                'name' => 'Nahid Hasan',
+                'email' => 'nahid@gmail.com',
                 'password' => bcrypt('password'),
                 'role_id' => Role::Member,
             ],
             [
-                'name' => 'Dev Member',
-                'email' => 'dev@gmail.com',
+                'name' => 'Tofael Ahmed',
+                'email' => 'tofael@gmail.com',
+                'password' => bcrypt('password'),
+                'role_id' => Role::Member,
+            ],
+            [
+                'name' => 'Hossain Rabbi',
+                'email' => 'rabbi@gmail.com',
+                'password' => bcrypt('password'),
+                'role_id' => Role::Member,
+            ],
+            [
+                'name' => 'Hridoy Khan',
+                'email' => 'hirdoy@gmail.com',
                 'password' => bcrypt('password'),
                 'role_id' => Role::Member,
             ],

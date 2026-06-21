@@ -7,7 +7,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Deposit extends Model
 {
-    protected $fillable = ['member_id', 'amount', 'date', 'note'];
+    protected $fillable = ['month_id', 'member_id', 'amount', 'date', 'note'];
+
+    public function month(): BelongsTo
+    {
+        return $this->belongsTo(Month::class);
+    }
 
     protected function casts(): array
     {

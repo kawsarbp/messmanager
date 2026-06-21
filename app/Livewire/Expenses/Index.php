@@ -42,10 +42,12 @@ class Index extends Component
         $this->validate();
 
         $mess = Auth::user()->member->mess;
+        $activeMonth = $mess->activeMonth();
 
         Expense::updateOrCreate(
             ['id' => $this->editingId],
             [
+                'month_id' => $activeMonth?->id,
                 'mess_id' => $mess->id,
                 'amount' => $this->amount,
                 'category' => $this->category,
@@ -97,8 +99,10 @@ class Index extends Component
     public function render()
     {
         $mess = Auth::user()->member->mess;
+        $activeMonth = $mess->activeMonth();
 
         $expenses = Expense::where('mess_id', $mess->id)
+            ->when($activeMonth, fn ($q) => $q->where('month_id', $activeMonth->id))
             ->orderBy('id', 'desc')
             ->paginate(20);
 
