@@ -16,6 +16,7 @@ class Index extends Component
     public $amount = '';
     public $date = '';
     public $note = '';
+    public $editingId = null;
 
     protected function rules(): array
     {
@@ -36,16 +37,40 @@ class Index extends Component
     {
         $this->validate();
 
-        Deposit::create([
-            'member_id' => $this->member_id,
-            'amount' => $this->amount,
-            'date' => $this->date,
-            'note' => $this->note,
-        ]);
+        Deposit::updateOrCreate(
+            ['id' => $this->editingId],
+            [
+                'member_id' => $this->member_id,
+                'amount' => $this->amount,
+                'date' => $this->date,
+                'note' => $this->note,
+            ]
+        );
 
-        $this->reset('member_id', 'amount', 'note');
+        $this->dispatch('toast', message: $this->editingId ? 'Deposit updated successfully.' : 'Deposit added successfully.');
+        $this->cancelEdit();
+    }
+
+    public function editDeposit($id)
+    {
+        $deposit = Deposit::findOrFail($id);
+        $this->editingId = $deposit->id;
+        $this->member_id = $deposit->member_id;
+        $this->amount = $deposit->amount;
+        $this->date = $deposit->date->format('Y-m-d');
+        $this->note = $deposit->note;
+    }
+
+    public function cancelEdit()
+    {
+        $this->reset('editingId', 'member_id', 'amount', 'note');
         $this->date = now()->format('Y-m-d');
-        session()->flash('message', 'Deposit added successfully.');
+    }
+
+    public function deleteDeposit($id)
+    {
+        Deposit::findOrFail($id)->delete();
+        $this->dispatch('toast', message: 'Deposit deleted.');
     }
 
     public function logout()

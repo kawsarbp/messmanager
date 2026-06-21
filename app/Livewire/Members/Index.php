@@ -40,6 +40,9 @@ class Index extends Component
                 : VisibilityStatus::Active,
         ]);
 
+        $status = $member->fresh()->status?->name ?? 'active';
+        $this->dispatch('toast', message: "{$member->user->name} is now {$status}.");
+
     }
 
     public function logout()

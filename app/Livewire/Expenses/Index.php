@@ -15,6 +15,7 @@ class Index extends Component
     public $category = '';
     public $description = '';
     public $date = '';
+    public $editingId = null;
 
     protected function rules(): array
     {
@@ -37,17 +38,41 @@ class Index extends Component
 
         $mess = Auth::user()->member->mess;
 
-        Expense::create([
-            'mess_id' => $mess->id,
-            'amount' => $this->amount,
-            'category' => $this->category,
-            'description' => $this->description,
-            'date' => $this->date,
-        ]);
+        Expense::updateOrCreate(
+            ['id' => $this->editingId],
+            [
+                'mess_id' => $mess->id,
+                'amount' => $this->amount,
+                'category' => $this->category,
+                'description' => $this->description,
+                'date' => $this->date,
+            ]
+        );
 
-        $this->reset('amount', 'category', 'description');
+        $this->dispatch('toast', message: $this->editingId ? 'Expense updated successfully.' : 'Expense added successfully.');
+        $this->cancelEdit();
+    }
+
+    public function editExpense($id)
+    {
+        $expense = Expense::findOrFail($id);
+        $this->editingId = $expense->id;
+        $this->amount = $expense->amount;
+        $this->category = $expense->category;
+        $this->description = $expense->description;
+        $this->date = $expense->date->format('Y-m-d');
+    }
+
+    public function cancelEdit()
+    {
+        $this->reset('editingId', 'amount', 'category', 'description');
         $this->date = now()->format('Y-m-d');
-        session()->flash('message', 'Expense added successfully.');
+    }
+
+    public function deleteExpense($id)
+    {
+        Expense::findOrFail($id)->delete();
+        $this->dispatch('toast', message: 'Expense deleted.');
     }
 
     public function logout()

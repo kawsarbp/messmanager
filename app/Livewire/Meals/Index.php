@@ -58,7 +58,7 @@ class Index extends Component
             ]
         );
 
-        session()->flash('message', $this->editingId ? 'Meal updated successfully.' : 'Meal added successfully.');
+        $this->dispatch('toast', message: $this->editingId ? 'Meal updated successfully.' : 'Meal added successfully.');
         $this->cancelEdit();
     }
 
@@ -82,7 +82,7 @@ class Index extends Component
     public function deleteMeal($id)
     {
         Meal::findOrFail($id)->delete();
-        session()->flash('message', 'Meal deleted.');
+        $this->dispatch('toast', message: 'Meal deleted.');
     }
 
     public function logout()

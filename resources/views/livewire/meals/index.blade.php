@@ -17,10 +17,6 @@
             <h1 class="text-2xl font-bold">Meals</h1>
         </div>
 
-        @if (session('message'))
-            <div class="mb-6 text-sm text-green-600 bg-green-50 rounded-lg px-4 py-3">{{ session('message') }}</div>
-        @endif
-
         <form wire:submit="save" class="mb-10 p-6 border border-gray-200 rounded-xl">
             <h2 class="font-semibold text-sm mb-4">{{ $editingId ? 'Edit Meal' : 'Add Meal' }}</h2>
             <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-4">

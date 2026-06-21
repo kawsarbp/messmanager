@@ -17,12 +17,8 @@
             <h1 class="text-2xl font-bold">Expenses</h1>
         </div>
 
-        @if (session('message'))
-            <div class="mb-6 text-sm text-green-600 bg-green-50 rounded-lg px-4 py-3">{{ session('message') }}</div>
-        @endif
-
         <form wire:submit="save" class="mb-10 p-6 border border-gray-200 rounded-xl">
-            <h2 class="font-semibold text-sm mb-4">Add Expense</h2>
+            <h2 class="font-semibold text-sm mb-4">{{ $editingId ? 'Edit Expense' : 'Add Expense' }}</h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                 <div>
                     <label class="block text-xs font-medium text-gray-700 mb-1">Amount</label>
@@ -44,7 +40,12 @@
                     <input type="text" wire:model.blur="description" placeholder="Optional details" class="w-full px-3 py-2 rounded-lg border border-gray-300 focus:border-gray-900 focus:ring-1 focus:ring-gray-900 outline-none text-sm">
                 </div>
             </div>
-            <button type="submit" class="bg-gray-900 hover:bg-gray-800 text-white text-sm font-semibold px-5 py-2 rounded-lg">Add Expense</button>
+            <div class="flex items-center gap-3">
+                <button type="submit" class="bg-gray-900 hover:bg-gray-800 text-white text-sm font-semibold px-5 py-2 rounded-lg">{{ $editingId ? 'Update' : 'Add Expense' }}</button>
+                @if ($editingId)
+                    <button type="button" wire:click="cancelEdit" class="text-sm text-gray-500 hover:text-gray-700 font-medium">Cancel</button>
+                @endif
+            </div>
         </form>
 
         <div class="border border-gray-200 rounded-xl overflow-hidden">
@@ -55,6 +56,8 @@
                         <th class="px-6 py-3 font-medium text-gray-600">Amount</th>
                         <th class="px-6 py-3 font-medium text-gray-600">Date</th>
                         <th class="px-6 py-3 font-medium text-gray-600">Description</th>
+                        <th class="px-6 py-3 font-medium text-gray-600"></th>
+                        <th class="px-6 py-3 font-medium text-gray-600"></th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
@@ -64,6 +67,12 @@
                             <td class="px-6 py-3 font-medium">${{ number_format($expense->amount, 2) }}</td>
                             <td class="px-6 py-3 text-gray-500">{{ $expense->date->format('M d, Y') }}</td>
                             <td class="px-6 py-3 text-gray-500">{{ $expense->description ?: '-' }}</td>
+                            <td class="px-6 py-3 text-right">
+                                <button wire:click="editExpense({{ $expense->id }})" class="text-gray-500 hover:text-gray-700 text-xs font-medium">Edit</button>
+                            </td>
+                            <td class="px-6 py-3 text-right">
+                                <button wire:click="deleteExpense({{ $expense->id }})" wire:confirm="Are you sure you want to delete this expense?" class="text-red-500 hover:text-red-700 text-xs font-medium">Delete</button>
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>
