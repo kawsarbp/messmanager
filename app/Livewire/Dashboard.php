@@ -48,6 +48,7 @@ class Dashboard extends Component
 
         $totalMealQty = $meals->sum();
         $totalDeposits = $deposits->sum();
+        $mealRate = $totalMealQty > 0 ? $totalExpenses / $totalMealQty : 0;
 
         $summary = $members->map(function ($member) use ($deposits, $meals, $totalExpenses, $totalMealQty, $currentMemberId, $members) {
             $memberDeposits = (float) ($deposits[$member->id] ?? 0);
@@ -69,7 +70,7 @@ class Dashboard extends Component
 
         $summary = $summary->sortByDesc('is_me')->values();
 
-        return view('livewire.dashboard', compact('summary', 'totalExpenses', 'totalDeposits', 'totalMealQty'))
+        return view('livewire.dashboard', compact('summary', 'totalExpenses', 'totalDeposits', 'totalMealQty', 'mealRate'))
             ->layout('layouts.app', ['title' => 'Dashboard - DIU Mess Management System']);
     }
 }
