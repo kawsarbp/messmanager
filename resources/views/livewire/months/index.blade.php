@@ -72,10 +72,11 @@
 
                 $totalMealQty = $meals->sum();
                 $totalDeposits = $deposits->sum();
+                $mealRate = $totalMealQty > 0 ? $totalExpenses / $totalMealQty : 0;
                 $currentMemberId = Auth::user()->member->id;
             @endphp
 
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
                 <div class="border border-gray-200 rounded-xl p-5 bg-blue-50">
                     <p class="text-xs font-medium text-blue-600 uppercase tracking-wide">Total Deposits</p>
                     <p class="text-2xl font-bold mt-1"><span class="font-bold text-lg mr-0.5">&#2547;</span>{{ number_format($totalDeposits, 2) }}</p>
@@ -87,6 +88,10 @@
                 <div class="border border-gray-200 rounded-xl p-5 bg-rose-50">
                     <p class="text-xs font-medium text-rose-600 uppercase tracking-wide">Total Expenses</p>
                     <p class="text-2xl font-bold mt-1"><span class="font-bold text-lg mr-0.5">&#2547;</span>{{ number_format($totalExpenses, 2) }}</p>
+                </div>
+                <div class="border border-gray-200 rounded-xl p-5 bg-emerald-50">
+                    <p class="text-xs font-medium text-emerald-600 uppercase tracking-wide">Meal Rate</p>
+                    <p class="text-2xl font-bold mt-1"><span class="font-bold text-lg mr-0.5">&#2547;</span>{{ number_format($mealRate, 2) }}</p>
                 </div>
             </div>
 
