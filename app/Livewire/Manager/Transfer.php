@@ -3,6 +3,7 @@
 namespace App\Livewire\Manager;
 
 use App\Enums\Role;
+use App\Enums\VisibilityStatus;
 use App\Models\Member;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -46,6 +47,7 @@ class Transfer extends Component
         $members = Member::with('user')
             ->where('mess_id', $mess->id)
             ->where('user_id', '!=', $user->id)
+            ->where('status', VisibilityStatus::Active)
             ->get();
 
         return view('livewire.manager.transfer', compact('members'))
