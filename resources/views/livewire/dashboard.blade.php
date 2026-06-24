@@ -49,7 +49,7 @@
             <p class="text-gray-500 text-sm mt-1">Member summary &mdash; {{ $summary->count() }} members</p>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-4">
             <div class="border border-gray-200 rounded-xl p-5 bg-blue-50">
                 <p class="text-xs font-medium text-blue-600 uppercase tracking-wide">Total Deposits</p>
                 <p class="text-2xl font-bold mt-1"><span class="font-bold text-lg mr-0.5">&#2547;</span>{{ number_format($totalDeposits, 2) }}</p>
@@ -66,40 +66,55 @@
                 <p class="text-xs font-medium text-emerald-600 uppercase tracking-wide">Meal Rate</p>
                 <p class="text-2xl font-bold mt-1"><span class="font-bold text-lg mr-0.5">&#2547;</span>{{ number_format($mealRate, 2) }}</p>
             </div>
+            <div class="border border-gray-200 rounded-xl p-5 {{ $netBalance >= 0 ? 'bg-purple-50' : 'bg-red-50' }}">
+                <p class="text-xs font-medium {{ $netBalance >= 0 ? 'text-purple-600' : 'text-red-600' }} uppercase tracking-wide">Net Balance</p>
+                <p class="text-2xl font-bold mt-1 {{ $netBalance >= 0 ? 'text-purple-700' : 'text-red-700' }}">
+                    <span class="font-bold text-lg mr-0.5">&#2547;</span>{{ number_format(abs($netBalance), 2) }}
+                    <span class="text-xs font-normal {{ $netBalance >= 0 ? 'text-purple-500' : 'text-red-500' }}">
+                        {{ $netBalance >= 0 ? '(Surplus)' : '(Deficit)' }}
+                    </span>
+                </p>
+            </div>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            @foreach ($summary as $item)
-                <div class="border border-gray-200 rounded-xl p-5 {{ $item['is_me'] ? 'ring-2 ring-gray-900 bg-gray-50' : '' }}">
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="font-semibold text-sm">{{ $item['name'] }}</h3>
-                        @if ($item['is_me'])
-                            <span class="text-xs font-medium text-gray-500 bg-white px-2 py-0.5 rounded-full border border-gray-200">You</span>
-                        @endif
-                    </div>
+        <h2 class="text-lg font-semibold mb-4 mt-8">Meal Balance Breakdown</h2>
 
-                    <div class="space-y-3">
-                        <div class="flex items-center justify-between text-sm">
-                            <span class="text-gray-500">Deposits</span>
-                            <span class="font-medium"><span class="font-bold text-lg mr-0.5">&#2547;</span>{{ number_format($item['total_deposits'], 2) }}</span>
-                        </div>
-                        <div class="flex items-center justify-between text-sm">
-                            <span class="text-gray-500">Meals</span>
-                            <span class="font-medium">{{ number_format($item['total_meals'], 2) }}</span>
-                        </div>
-                        <div class="flex items-center justify-between text-sm pt-2 border-t border-gray-100">
-                            <span class="text-gray-500 font-medium">Balance</span>
-                            <span class="font-semibold {{ $item['balance'] >= 0 ? 'text-green-600' : 'text-red-600' }}">
-                                <span class="font-bold text-lg mr-0.5">&#2547;</span>{{ number_format(abs($item['balance']), 2) }}
-                                <span class="text-xs font-normal">{{ $item['balance'] >= 0 ? ' (Receivable)' : ' (Payable)' }}</span>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            @endforeach
-        </div>
-
-        @if ($summary->isEmpty())
+        @if ($summary->isNotEmpty())
+            <div class="overflow-x-auto border border-gray-200 rounded-xl">
+                <table class="w-full text-sm">
+                    <thead>
+                        <tr class="bg-gray-50 border-b border-gray-200">
+                            <th class="text-left px-4 py-3 font-medium text-gray-600">Member</th>
+                            <th class="text-right px-4 py-3 font-medium text-gray-600">Deposits</th>
+                            <th class="text-right px-4 py-3 font-medium text-gray-600">Meals</th>
+                            <th class="text-right px-4 py-3 font-medium text-gray-600">Expense Share</th>
+                            <th class="text-right px-4 py-3 font-medium text-gray-600">Balance</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100">
+                        @foreach ($summary as $item)
+                            <tr class="{{ $item['is_me'] ? 'bg-gray-50' : '' }}">
+                                <td class="px-4 py-3 font-medium">
+                                    {{ $item['name'] }}
+                                    @if ($item['is_me'])
+                                        <span class="ml-1.5 text-xs text-gray-500 bg-white px-1.5 py-0.5 rounded-full border border-gray-200">You</span>
+                                    @endif
+                                </td>
+                                <td class="px-4 py-3 text-right font-medium">&#2547;{{ number_format($item['total_deposits'], 2) }}</td>
+                                <td class="px-4 py-3 text-right">{{ number_format($item['total_meals'], 2) }}</td>
+                                <td class="px-4 py-3 text-right">&#2547;{{ number_format($item['total_deposits'] - $item['balance'], 2) }}</td>
+                                <td class="px-4 py-3 text-right font-semibold {{ $item['balance'] >= 0 ? 'text-green-600' : 'text-red-600' }}">
+                                    &#2547;{{ number_format(abs($item['balance']), 2) }}
+                                    <span class="text-xs font-normal {{ $item['balance'] >= 0 ? 'text-green-500' : 'text-red-500' }}">
+                                        {{ $item['balance'] >= 0 ? 'Recv' : 'Pay' }}
+                                    </span>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        @else
             <div class="border-2 border-dashed border-gray-200 rounded-xl p-8 sm:p-12 text-center">
                 <p class="text-gray-400 text-sm">No members found.</p>
             </div>

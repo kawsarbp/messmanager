@@ -70,7 +70,9 @@ class Dashboard extends Component
 
         $summary = $summary->sortByDesc('is_me')->values();
 
-        return view('livewire.dashboard', compact('summary', 'totalExpenses', 'totalDeposits', 'totalMealQty', 'mealRate'))
+        $netBalance = $totalDeposits - $totalExpenses;
+
+        return view('livewire.dashboard', compact('summary', 'totalExpenses', 'totalDeposits', 'totalMealQty', 'mealRate', 'netBalance'))
             ->layout('layouts.app', ['title' => 'Dashboard - DIU Mess Management System']);
     }
 }
